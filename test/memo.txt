@@ -1,0 +1,9 @@
+env.render():描写
+env.reset():棒の状態をもとに戻す
+env.step():実行
+step()内にenv.action_space.sample():サンプル（ランダム）
+env.step()の戻り値はobservation(ゲームの状態),reward(報酬),done(終了判定),info(デバッグなどの状情報
+observation[カートの位置　カートの速度　ポールの角度　ポールの回転速度]
+reward=0,done=True:棒が倒れた
+reward=1,done=False:棒がたっている
+)
