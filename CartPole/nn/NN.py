@@ -10,17 +10,17 @@ class NNN:
     def __init__(self):
         self.network = {}
         #self.network['W1'] = np.ones((4,3))/10
-        self.network['W1'] = np.random.normal(10,20,(4,3))#sigmoidを使う場合は大きすぎる平均0分散1
+        self.network['W1'] = np.random.normal(0,1,(4,3))#sigmoidを使う場合は大きすぎる平均0分散1
         #self.network['B1'] = np.ones(3)/10
-        self.network['B1'] = np.random.normal(10,20,(1,3))
+        self.network['B1'] = np.random.normal(0,1,(1,3))
         #self.network['W2'] = np.ones((3,2))/10
-        self.network['W2'] = np.random.normal(10,20,(3,2))
+        self.network['W2'] = np.random.normal(0,1,(3,2))
         #self.network['B2'] = np.ones(2)/10
-        self.network['B2'] = np.random.normal(10,20,(1,2))
+        self.network['B2'] = np.random.normal(0,1,(1,2))
         #self.network['W3'] = np.ones((2,1))/10
-        self.network['W3'] = np.random.normal(10,20,(2,1))
+        self.network['W3'] = np.random.normal(0,1,(2,1))
         #self.network['B3'] = np.ones(1)/10
-        self.network['B3'] = np.random.normal(10,20,(1,1))
+        self.network['B3'] = np.random.normal(0,1,(1,1))
         print(self.network)
 
     '''
