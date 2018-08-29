@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
 import deap
 #import NN
 from NN import NNN
@@ -19,7 +13,7 @@ import numpy as np
 from deap import algorithms
 
 nn = NNN()
-ENV = gym.make("CartPole-v0")
+ENV = gym.make("AsteroidsNoFrameskip-v4")
 MAX_STEPS = 201
 w_list = []
 # In[9]:
@@ -33,47 +27,13 @@ def decide_weight(network):
     #print(np.reshape(network['W1'],(12)))
     w_list = []
     if not network :
-        """
-        w_list.extend(np.reshape(np.random.normal(0,1,(4,3)),(12)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,3)),(3)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(3,2)),(6)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,2)),(2)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(2,1)),(2)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,1)),(1)))
-        """
         w_list.extend(np.reshape(np.random.normal(0,1,(4,6)),(24)))
         w_list.extend(np.reshape(np.random.normal(0,1,(1,6)),(6)))
         w_list.extend(np.reshape(np.random.normal(0,1,(6,3)),(18)))
         w_list.extend(np.reshape(np.random.normal(0,1,(1,3)),(3)))
         w_list.extend(np.reshape(np.random.normal(0,1,(3,1)),(3)))
         w_list.extend(np.reshape(np.random.normal(0,1,(1,1)),(1)))
-        """
-        w_list.extend(np.reshape(np.random.normal(0,1,(4,6)),(24)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,6)),(6)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(6,5)),(30)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,5)),(5)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(5,3)),(15)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,3)),(3)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(3,1)),(3)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,1)),(1)))
-        """
-    """
-    else :
-        w_list.extend(np.reshape(network['W1'],(12)))
-        w_list.extend(np.reshape(network['B1'],(3)))
-        w_list.extend(np.reshape(network['W2'],(6)))
-        w_list.extend(np.reshape(network['B2'],(2)))
-        w_list.extend(np.reshape(network['W3'],(2)))
-        w_list.extend(np.reshape(network['B3'],(1)))
-    """
-    '''
-    w_list.extend(np.reshape(NNN.network['W1'],(12)))
-    w_list.extend(np.reshape(NNN.network['B1'],(3)))
-    w_list.extend(np.reshape(NNN.network['W2'],(6)))
-    w_list.extend(np.reshape(NNN.network['B2'],(2)))
-    w_list.extend(np.reshape(NNN.network['W3'],(2)))
-    w_list.extend(np.reshape(NNN.network['B3'],(1)))
-    '''
+
     return w_list
 
 toolbox.register("gene",decide_weight,nn.network)
@@ -83,11 +43,6 @@ toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 def EV(individual):
     observation = ENV.reset()
     episode_reward = 0
-    if not individual :
-        print("kara")
-        for i in range(26):
-            individual.append(random.randrange(10))
-        return episode_reward
 
     network = nn.update(individual); #networkにindividualを適用
 

@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 ENV = gym.make("CartPole-v0")
 MAX_STEPS=200
-NGEN=300
+NGEN=40
 
 def safeDiv(left,right):
     if(right==0):
@@ -100,7 +100,7 @@ class Myclass:
         gen.append(i)
 def main():
         random.seed(1)
-        pop = toolbox.population(n=500)
+        pop = toolbox.population(n=150)
         hof = tools.HallOfFame(1)
 
         stats_fit= tools.Statistics(lambda ind: ind.fitness.values)

@@ -53,7 +53,7 @@ toolbox.register("mutate",gp.mutUniform,expr=toolbox.expr_mut,pset=pset)
 def main():
     random.seed(318)
 
-    pop = toolbox.population(n=300)
+    pop = toolbox.population(n=150)
     hof = tools.HallOfFame(1)
 
     stats_fit = tools.Statistics(lambda ind: ind.fitness.values)
