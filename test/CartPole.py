@@ -9,8 +9,8 @@ import time
 import  networkx as nx
 import matplotlib.pyplot as plt
 
-ENV = gym.make("CartPole-v0")
-MAX_STEPS=200
+ENV = gym.make("CartPole-v1")
+MAX_STEPS=1000
 NGEN=40
 
 def safeDiv(left,right):
@@ -80,6 +80,8 @@ toolbox.register("select",tools.selTournament,tournsize=3)
 toolbox.register("expr_mut", gp.genFull, min_= 0, max_ = 2)
 toolbox.register("mutate",gp.mutUniform,expr=toolbox.expr_mut,pset=pset)
 
+toolbox.decorate("mate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
+toolbox.decorate("mutate", gp.staticLimit(key=operator.attrgetter("height"), max_value=17))
 
 def get_action(observation,individual):
     action = decide_action(observation,individual) ##
@@ -87,7 +89,7 @@ def get_action(observation,individual):
     #observation[カートの位置，カートの速度，棒の角度，棒の角速度]
 def decide_action(observation,individual):
     func = toolbox.compile(expr=individual)
-    if(func(observation[2],observation[3],observation[0],observation[1]) >= 5):
+    if(func(observation[2],observation[3],observation[0],observation[1]) >= 0):
         return 1
     else :
         return 0
@@ -108,7 +110,7 @@ def main():
 
         mstats = tools.MultiStatistics(fitness=stats_fit,size=stats_size)
         mstats.register("avg", np.mean)
-        mstats.register("std", np.std)
+        #mstats.register("std", np.std)
         mstats.register("min", np.min)
         mstats.register("max", np.max)
         CXPB=0.5
@@ -118,6 +120,10 @@ def main():
 
 if __name__=='__main__':
     pop,log,hof = main()
+    print(hof)
+    print()
+    print()
+    print()
     expr = tools.selBest(pop,1)[0]
     print(expr)
     nodes, edges, labels = gp.graph(expr)

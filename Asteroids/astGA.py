@@ -1,6 +1,6 @@
 import deap
 #import NN
-from NN import NNN
+#from NN import NNN
 from deap import base
 from deap import creator
 from deap import tools
@@ -11,8 +11,10 @@ from gym import wrappers
 import time
 import numpy as np
 from deap import algorithms
+from skimage.color import rgb2gray
+from skimage.transform import resize
 
-nn = NNN()
+#nn = NNN()
 ENV = gym.make("AsteroidsNoFrameskip-v4")
 MAX_STEPS = 201
 w_list = []
@@ -40,26 +42,37 @@ toolbox.register("gene",decide_weight,nn.network)
 toolbox.register("individual",tools.initIterate,creator.Individual,toolbox.gene)
 toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 
-def EV(individual):
-    observation = ENV.reset()
-    episode_reward = 0
+def get_initial_state(observation,last_observation):
+    STATE_LENGTH = 4
+    FRAME_WIDTH = 84
+    FRAME_HEIGHT = 84
+    processed_observation = np.maximum(observation,last_observation)
+    processed_observation = np.uint8(resize(rg2gray(processed_observation), (FRAME_WIDTH,FRAME_HEIGHT)) * 255)
+    state = [processed_observation for _ in xrange(STATE_LENGTH)]
+    return np.stack(state, axis=0)
 
-    network = nn.update(individual); #networkにindividualを適用
+def preprocess(observation,last_observation):
+    processed_observaton = np.maximum(observation,last_observation)
+    processed_observation = np.uint8(resize(rgb2gray(processed_observation), (FRAME_WIDTH, FRAME_HEIGHT)) * 255)
+    return np.reshape(processed_observation, (1, FRAME_WIDTH, FRAME_HEIGHT))
 
-    for step in range(MAX_STEPS):
-        action = get_action(observation,individual,network)
-        observation_next,reward,done,info_not = ENV.step(action)
+def EV():
+    terminal = False
+    observation = env.reset()
+    for _ in xrange(random.randint(1,NO_OP_STEPS)):
+        last_observation = observation
+        observation, _, _, _ = env.step(0)
+    state = get_initial_state(observation,last_observation)
+    while not terminal:
+        last_observation = observation
+        action = get_action(state)
+        observation,reward,terminal,_ = env.step(action)
+        env.render()
+        processed_observation = preprocess(observation, last_observation)
+        state = run(state,action,terminal,processed_observation)
 
-        if done:
-            ENV.render()
-            break
-
-        observation = observation_next
-        episode_reward += reward
-
-        ENV.render()
-
-    return [episode_reward]
+def get_action(state):
+    print(state)
 
 toolbox.register("evaluate",EV)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float

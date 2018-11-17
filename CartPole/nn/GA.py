@@ -19,8 +19,8 @@ import numpy as np
 from deap import algorithms
 
 nn = NNN()
-ENV = gym.make("CartPole-v0")
-MAX_STEPS = 201
+ENV = gym.make("CartPole-v1")
+MAX_STEPS = 500
 w_list = []
 # In[9]:
 
@@ -41,12 +41,12 @@ def decide_weight(network):
         w_list.extend(np.reshape(np.random.normal(0,1,(2,1)),(2)))
         w_list.extend(np.reshape(np.random.normal(0,1,(1,1)),(1)))
         """
-        w_list.extend(np.reshape(np.random.normal(0,1,(4,6)),(24)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,6)),(6)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(6,3)),(18)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,3)),(3)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(3,1)),(3)))
-        w_list.extend(np.reshape(np.random.normal(0,1,(1,1)),(1)))
+        w_list.extend(np.reshape(np.random.normal(0,1,(24,16)),(384)))
+        w_list.extend(np.reshape(np.random.normal(0,1,(1,16)),(16)))
+        w_list.extend(np.reshape(np.random.normal(0,1,(16,8)),(128)))
+        w_list.extend(np.reshape(np.random.normal(0,1,(1,8)),(8)))
+        w_list.extend(np.reshape(np.random.normal(0,1,(8,4)),(32)))
+        w_list.extend(np.reshape(np.random.normal(0,1,(1,4)),(4)))
         """
         w_list.extend(np.reshape(np.random.normal(0,1,(4,6)),(24)))
         w_list.extend(np.reshape(np.random.normal(0,1,(1,6)),(6)))
@@ -109,7 +109,7 @@ def EV(individual):
 toolbox.register("evaluate",EV)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.05) #mutFllipBit floatに対して津えるやつ
-toolbox.register("select",tools.selLexicase)
+toolbox.register("select",tools.selTournament,tournsize=3)
 
 def get_action(observation,individual,network):
     action = decide_action(observation,individual,network)
@@ -121,19 +121,19 @@ def decide_action(observation,individual,network):
 def main():
     random.seed(1)
 
-    pop = toolbox.population(n=150)
+    pop = toolbox.population(n=400)
     hof = tools.HallOfFame(1)
     stats = tools.Statistics(lambda ind:ind.fitness.values)
     stats.register("avg", np.mean)
     stats.register("std", np.std)
     stats.register("min", np.min)
     stats.register("max", np.max)
-    pop,log = algorithms.eaSimple(pop,toolbox,cxpb=0.5,mutpb=0.2,ngen=40,stats=stats,halloffame=hof,verbose=True)
+    pop,log = algorithms.eaSimple(pop,toolbox,cxpb=0.5,mutpb=0.2,ngen=100,stats=stats,halloffame=hof,verbose=True)
 
     return pop,log,hof
 if __name__=='__main__':
-    print("pop_num = ",150)
-    print("gen_num ",40)
+    print("pop_num = ",400)
+    print("gen_num ",100)
     pop,log,hof = main()
     best_ind = tools.selBest(pop,1)[0]
     for ind in hof :
