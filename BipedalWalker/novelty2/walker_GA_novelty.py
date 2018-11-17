@@ -20,10 +20,19 @@ from deap import algorithms
 import operator
 import pickle
 
+class hof:
+    def __init__(self):
+        self.hofpop = []
+        self.fit = -500
+    def update(ind):
+        self.hofpop = ind
+
+hof = hof()
 env = gym.make("BipedalWalker-v2")
 nn = NNN()
 MAX_STEPS = 0
 w_list = []
+hof = []
 # In[9]:
 count = 0
 creator.create("FitnessMax",base.Fitness,weights=[1.0])
@@ -61,6 +70,8 @@ def getfit(individual):
         total_reward += reward
         if done:
             break
+    if total_reward >= hof.fit:
+        hof.update(individual)
     return total_reward
 
 
@@ -152,7 +163,6 @@ def main():
     pop = toolbox.population(n=100)
     with open('gen100checkpoints', 'rb') as f:
         pop = pickle.load(f)
-    hof = tools.HallOfFame(1)
     stats = tools.Statistics(lambda ind:ind.fitness.values)
     stats.register("avg", np.mean)
     stats.register("std", np.std)
@@ -167,6 +177,7 @@ def main():
     for ind in pop:
         ind.fitness.values = (ind.fitness.values[0] - popmean.fitness.values[0])**2,
     fits = [getfit(ind) for ind in pop]
+    hof = tools.HallOfFame(1)
     for i in range(100,NGEN+1):
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
@@ -227,3 +238,4 @@ def main():
     return pop,hof
 if __name__=='__main__':
     pop,hof = main()
+    print(hof)
