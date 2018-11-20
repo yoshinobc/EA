@@ -15,7 +15,7 @@ import operator
 import pickle
 
 ENV = gym.make("BipedalWalker-v2")
-MAX_STEPS = 100
+MAX_STEPS = 3000
 count = 0
 creator.create("FitnessMax",base.Fitness,weights=[1.0])
 creator.create("Individual", list, fitness=creator.FitnessMax)
@@ -47,7 +47,7 @@ def rendering(individual):
     print(count,":",total_reward)
     count+=1
 def main():
-    with open('gen500checAkpoints', 'rb') as f:
+    with open('gen950chekipoint_maxstepsliner2', 'rb') as f:
         population = pickle.load(f)
     for ind in population:
         rendering(ind)
