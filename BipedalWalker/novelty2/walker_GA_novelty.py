@@ -24,20 +24,19 @@ class hof:
     def __init__(self):
         self.hofpop = []
         self.fit = -500
-    def update(ind):
+    def update(self,ind,total_reward):
         self.hofpop = ind
+        self.fit = total_reward
 
 hof = hof()
 env = gym.make("BipedalWalker-v2")
 nn = NNN()
-MAX_STEPS = 0
 w_list = []
-hof = []
 # In[9]:
 count = 0
 creator.create("FitnessMax",base.Fitness,weights=[1.0])
 creator.create("Individual", list, fitness=creator.FitnessMax)
-NGEN = 500
+NGEN = 1000
 CXPB=0.5
 MUTPB=0.2
 toolbox = base.Toolbox()
@@ -71,7 +70,7 @@ def getfit(individual):
         if done:
             break
     if total_reward >= hof.fit:
-        hof.update(individual)
+        hof.update(individual,total_reward)
     return total_reward
 
 
@@ -79,51 +78,44 @@ def EV(individual,gen):
     global count
     observation = env.reset()
     network = nn.update(individual); #networkにindividualを適用
-    observatin = env.reset()
-    total_reward = 0
     steps  = 0
-    action_lists = []
     hull_angle_lists = []
-
+    MAX_STEPS = 0
     if 450 < gen:
         MAX_STEPS = 3700
     elif 400 < gen <= 450:
         MAX_STEPS = 3000
     elif 350 < gen <= 400:
         MAX_STEPS = 2500
-    elif 300 < gen <= 350:
-        MAX_STEPS = 1800
     elif 250 < gen <= 300:
+        MAX_STEPS = 1800
+    elif 200 < gen <= 350:
         MAX_STEPS = 1200
-    elif 200 < gen <= 250:
-        MAX_STEPS = 800
     elif 150 < gen <= 200:
+        MAX_STEPS = 800
+    elif 100 < gen <= 250:
         MAX_STEPS = 500
-    elif 100 < gen <= 150:
+    elif 50 < gen <= 100:
         MAX_STEPS = 300
-    elif  0 <= gen <= 100:
+    elif 0 <= gen <= 50:
         MAX_STEPS = 100
-
-    for i in range(MAX_STEPS):
-        global max_fitness
-        global mean_fitness
-
-        #env = wrappers.Monitor(env,'/mnt/c/Users/bc/Documents/EA/BipedalWalker/movies/',force=True)
-        action = get_action(observation,network)
-        observation,reward,done,xylists = env.step(action)
-        action_lists.append(xylists)
-        hull_angle_lists.append(observation[0])
-        total_reward += reward
+    
+    final_novelty = 0
+    for _ in range(2):
+        total_novelty = 0
+        action_lists = []
+        for i in range(MAX_STEPS):
+            action = get_action(observation,network)
+            observation,reward,done,xylists = env.step(action)
+            action_lists.append(xylists)
         #if (-4.8  > observation[0]) or (observation[0] > 4.8) or (0.017453292519943 < observation[3] < -0.017453292519943) or (episode_reward >= MAX_STEPS):
-        steps = i
-        if done:
-            break
-    if total_reward >= 280:
-            print(individual)
-    total_novelty = 0
-    for i in range(len(action_lists) - 1):
-        total_novelty +=np.sqrt((action_lists[i+1][0] - action_lists[i][0])**2 + (action_lists[i+1][1] - action_lists[i][1])**2)
-    return total_novelty,
+            steps = i
+            if done:
+                break
+        for i in range(len(action_lists) - 1):
+            total_novelty += np.sqrt((action_lists[i+1][0] - action_lists[i][0])**2 + (action_lists[i+1][1] - action_lists[i][1])**2)
+        final_novelty += total_novelty
+    return final_novelty / 2,
 
 toolbox.register("evaluate",EV,gen = 0)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
@@ -147,22 +139,24 @@ def rendering(individual):
         action = get_action(observation,network)
         observation,reward,done,xylists = ENV.step(action)
         total_reward += reward
-        ENV.render()
     #if (-4.8  > observation[0]) or (observation[0] > 4.8) or (0.017453292519943 < observation[3] < -0.017453292519943) or (episode_reward >= MAX_STEPS):
         if done:
             ENV.render()
             if total_reward >= 280:
                 print(individial)
             break
+
 def main():
     global max_fitness
     global mean_fitness
 
     random.seed(1)
 
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=150)
+    """
     with open('gen100checkpoints', 'rb') as f:
         pop = pickle.load(f)
+    """
     stats = tools.Statistics(lambda ind:ind.fitness.values)
     stats.register("avg", np.mean)
     stats.register("std", np.std)
@@ -177,8 +171,8 @@ def main():
     for ind in pop:
         ind.fitness.values = (ind.fitness.values[0] - popmean.fitness.values[0])**2,
     fits = [getfit(ind) for ind in pop]
-    hof = tools.HallOfFame(1)
-    for i in range(100,NGEN+1):
+    print("gen","max","mean")
+    for i in range(NGEN):
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
         # Clone the selected individuals
@@ -205,16 +199,18 @@ def main():
 
         # Evaluate the individuals with an invalid fitness
         invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
+
         novelties = map(toolbox.evaluate, invalid_ind)
         for ind, nov in zip(invalid_ind, novelties):
             ind.fitness.values = nov
-        pop.sort(key = operator.attrgetter('fitness.values'))
+
+        offspring.sort(key = operator.attrgetter('fitness.values'))
         """
         for i, ind in enumerate(pop):
             print(i, ind.fitness.values)
         """
-        popmean = pop[75]
-        for ind in pop:
+        popmean = offspring[75]
+        for ind in offspring:
             ind.fitness.values = (ind.fitness.values[0] - popmean.fitness.values[0])**2,
 
         # The population is entirely replaced by the offspring
@@ -229,13 +225,26 @@ def main():
         std = abs(sum2 / length - mean**2)**0.5
 
         #print("gen:",i,"  Min %s" % min(fits),"  Max %s" % max(fits),"  Avg %s" % mean,"  Std %s" % std)
-        print(i," ",max(fits), " ",mean)
+
+        print(i,max(fits),mean)
+        with open('liner_novelty.txt',mode='a') as f:
+            f.write(str(i))
+            f.write(str(max(fits)))
+            f.write(str(mean))
+            f.write("\n")
         if i%50 == 0:
-            with open('gen'+str(i)+'checkpoint_maxstepsliner','wb') as fp:
+            with open('gen'+str(i)+'checkpoint_maxstepsliner2','wb') as fp:
                 pickle.dump(pop,fp)
+
+            print(hof.fit,hof.hofpop)
+
+    """
     for ind in pop:
         rendering(ind)
+    """
     return pop,hof
 if __name__=='__main__':
     pop,hof = main()
-    print(hof)
+    with open('gen1000hof','wb') as fp:
+                pickle.dump(hof,fp)
+    print(hof.fit,hof.hofpop)

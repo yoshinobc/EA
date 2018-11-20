@@ -32,9 +32,10 @@ def rendering(individual):
     global count
     network = nn.update(individual); #networkにindividualを適用
     total_reward = 0
+    observation = ENV.reset()
     for i in range(MAX_STEPS):
         #ENV = wrappers.Monitor(env,'/mnt/c/Users/bc/Documents/EA/BipedalWalker/noveltymovies/',force=True)
-        observation = ENV.reset()
+        
         action = get_action(observation,network)
         observation,reward,done,xylists = ENV.step(action)
         print("action:",action,"xylists:",xylists)
@@ -46,7 +47,7 @@ def rendering(individual):
     print(count,":",total_reward)
     count+=1
 def main():
-    with open('gen500checkpoints', 'rb') as f:
+    with open('gen500checAkpoints', 'rb') as f:
         population = pickle.load(f)
     for ind in population:
         rendering(ind)
