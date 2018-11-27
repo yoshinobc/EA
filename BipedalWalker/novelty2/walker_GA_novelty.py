@@ -29,7 +29,7 @@ class hof:
         self.fit = total_reward
 
 hof = hof()
-env = gym.make("BipedalWalker-v2")
+env = gym.make("BipedalWalkerHardcore-v2")
 nn = NNN()
 w_list = []
 # In[9]:
@@ -175,6 +175,8 @@ def main():
     for i in range(NGEN):
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
+        print(len((offspring)))
+        print("test")
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
 
@@ -227,13 +229,15 @@ def main():
         #print("gen:",i,"  Min %s" % min(fits),"  Max %s" % max(fits),"  Avg %s" % mean,"  Std %s" % std)
 
         print(i,max(fits),mean)
-        with open('liner_novelty.txt',mode='a') as f:
+        with open('liner_novelty_hardcore.txt',mode='a') as f:
             f.write(str(i))
+            f.write(" ")
             f.write(str(max(fits)))
+            f.write(" ")
             f.write(str(mean))
             f.write("\n")
         if i%50 == 0:
-            with open('gen'+str(i)+'checkpoint_maxstepsliner2','wb') as fp:
+            with open('gen'+str(i)+'checkpoint_maxstepsliner_hardcore','wb') as fp:
                 pickle.dump(pop,fp)
 
             print(hof.fit,hof.hofpop)

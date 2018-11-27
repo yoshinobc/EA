@@ -63,15 +63,17 @@ class NNN:
         a3 = np.dot(z2,W3) + b3
         y = ActivationFunction.sigmoid_function(a3)
         """
-        W1, W2, W3 = network['W1'], network['W2'], network['W3']
-        b1, b2, b3 = network['B1'], network['B2'], network['B3']
-        a1 = np.dot(X,W1) + b1
+        #W1, W2, W3 = network['W1'], network['W2'], network['W3']
+        #b1, b2, b3 = network['B1'], network['B2'], network['B3']
+        W1, W2 = network['W1'], network['W2']
+        b1, b2 = network['B1'], network['B2']
         a1 = np.dot(X,W1) + b1
         z1 = a1
         a2 = np.dot(z1,W2) + b2
         z2 = a2
-        a3 = np.dot(z2,W3) + b3
-        y = (sigmoid(a3) - 0.5) * 2
+        #a3 = np.dot(z2,W3) + b3
+        #y = (sigmoid(a3) - 0.5) * 2
+        y = (sigmoid(z2) - 0.5) * 2
         return y[0]
 
 
@@ -93,13 +95,16 @@ class NNN:
         self.network['W3'] = np.reshape(individual[23:25],(2,1))
         self.network['B3'] = np.reshape(individual[25:26],(1,1))
         """
-        self.network['W1'] = np.reshape(individual[:384],(24,16))
-        self.network['B1'] = np.reshape(individual[384:400],(1,16))
-        self.network['W2'] = np.reshape(individual[400:528],(16,8))
-        self.network['B2'] = np.reshape(individual[528:536],(1,8))
-        self.network['W3'] = np.reshape(individual[536:568],(8,4))
-        self.network['B3'] = np.reshape(individual[568:572],(1,4))
-
+        #self.network['W1'] = np.reshape(individual[:384],(24,16))
+        #self.network['B1'] = np.reshape(individual[384:400],(1,16))
+        #self.network['W2'] = np.reshape(individual[400:528],(16,8))
+        #self.network['B2'] = np.reshape(individual[528:536],(1,8))
+        #self.network['W3'] = np.reshape(individual[536:568],(8,4))
+        #self.network['B3'] = np.reshape(individual[568:572],(1,4))
+        self.network['W1'] = np.reshape(individual[:240],(24,10))
+        self.network['B1'] = np.reshape(individual[240:250],(1,10))
+        self.network['W2'] = np.reshape(individual[250:290],(10,4))
+        self.network['B2'] = np.reshape(individual[290:294],(1,4))
 
         """
         self.network['W1'] = np.reshape(individual[:24],(4,6))

@@ -4,10 +4,10 @@
 #適正基準
 fitness_criterion     = max
 #適正基
-fitness_threshold     = 300
-pop_size              = 150
+pop_size              = 500
+fitness_threshold = 90
 #消滅時にリセット
-reset_on_extinction   = True
+reset_on_extinction   = 0
 no_fitness_termination = 1
 
 [DefaultGenome]
@@ -20,8 +20,8 @@ activation_options      = sigmoid tanh
 # node aggregation options
 aggregation_default     = sum
 #集計変異率
-aggregation_mutate_rate = 0.3
-aggregation_options     = mean
+aggregation_mutate_rate = 0.2
+aggregation_options     = max
 
 # node bias options
 #バイアス初期平均
@@ -30,8 +30,8 @@ bias_init_stdev         = 1.0
 bias_max_value          = 100
 bias_min_value          = -100
 bias_mutate_power       = 0.5
-bias_mutate_rate        = 0.7
-bias_replace_rate       = 0.1
+bias_mutate_rate        = 0.9
+bias_replace_rate       = 0.01
 
 # genome compatibility options
 #互換性分離係数
@@ -40,8 +40,8 @@ compatibility_disjoint_coefficient = 1.0
 compatibility_weight_coefficient   = 0.5
 
 # connection add/remove rates
-conn_add_prob           = 0.5
-conn_delete_prob        = 0.5
+conn_add_prob           = 0.1
+conn_delete_prob        = 0.05
 
 # connection enable options
 enabled_default         = True
@@ -86,5 +86,5 @@ max_stagnation       = 20
 species_elitism      = 3
 
 [DefaultReproduction]
-elitism            = 3
+elitism            = 2
 survival_threshold = 0.3
