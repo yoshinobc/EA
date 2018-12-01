@@ -99,7 +99,7 @@ def EV(individual,gen):
         MAX_STEPS = 300
     elif 0 <= gen <= 50:
         MAX_STEPS = 100
-    
+
     final_novelty = 0
     for _ in range(2):
         total_novelty = 0
@@ -170,7 +170,6 @@ def main():
     popmean = pop[75]
     for ind in pop:
         ind.fitness.values = (ind.fitness.values[0] - popmean.fitness.values[0])**2,
-    fits = [getfit(ind) for ind in pop]
     print("gen","max","mean")
     for i in range(NGEN):
         # Select the next generation individuals
@@ -220,7 +219,8 @@ def main():
 
         # Gather all the fitnesses in one list and print the stats
         fits = [getfit(ind) for ind in pop]
-
+        print("test")
+        print(fits)
         length = len(pop)
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
