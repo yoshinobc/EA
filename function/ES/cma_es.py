@@ -33,10 +33,15 @@ def main():
     centroid_array = []
     print("gen ","min ","max ","mean ","std")
     for gen in range(NGEN):
+        fig = plt.figure()
+        ax = fig.add_subplot(1,1,1)
         # 新たな世代の個体群を生成
         population = toolbox.generate()
         # 個体群の評価
-        print(len(population))
+
+        for ind in population:
+            ax.scatter(ind[0],ind[1],c='blue',marker='.')
+
         fitnesses = toolbox.map(toolbox.evaluate, population)
         for ind, fit in zip(population, fitnesses):
             ind.fitness.values = fit
@@ -58,8 +63,18 @@ def main():
         halloffame_array.append(halloffame[0])
         C_array.append(strategy.C)
         centroid_array.append(strategy.centroid)
-
+        if len(str(gen))==1:
+            plt.savefig('cma_es_pic/00'+str(gen)+'.png')
+        elif(len(str(gen))) == 2:
+            plt.savefig('cma_es_pic/0'+str(gen)+'.png')
+        elif(len(str(gen))) == 3:
+            plt.savefig('cma_es_pic/'+str(gen)+'.png')
+        #savefig('cma_es_pic/figure'+str(gen)+'.png')
+        plt.clf()
+        if min(fits) == 0:
+            break
     # 計算結果を描画
+    """
     import matplotlib.pyplot as plt
     import matplotlib.cm as cm
     from matplotlib.patches import Ellipse
@@ -85,6 +100,7 @@ def main():
         ax.axis([-6, 6, -6, 6])
         plt.draw()
     plt.show(block=True)
+    """
 
 if __name__ == "__main__":
     main()
