@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-x = np.arange(-20, 20, 0.05) #x軸の描画範囲の生成。0から10まで0.05刻み。
-y = np.arange(-20, 20, 0.05) #y軸の描画範囲の生成。0から10まで0.05刻み。
+x = np.arange(-6, 6, 0.05) #x軸の描画範囲の生成。0から10まで0.05刻み。
+y = np.arange(-6, 6, 0.05) #y軸の描画範囲の生成。0から10まで0.05刻み。
 
 X, Y = np.meshgrid(x, y)
 

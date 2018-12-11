@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import random
 
 NGEN = 100
-POPNUM = 150
+POPNUM = 15
 INDSIZE = 2
 CXPB = 0.5
 MUTPB = 0.01
@@ -27,7 +27,7 @@ toolbox.register("select",tools.selTournament,tournsize=3)
 
 def main():
     np.random.seed(64)
-    pop = toolbox.population(n=150)
+    pop = toolbox.population(n=POPNUM)
     hof = tools.HallOfFame(1)
     stats = tools.Statistics(lambda ind:ind.fitness.values)
     stats.register("avg", np.mean)
@@ -47,8 +47,9 @@ def main():
         ax.scatter(ind[0],ind[1],c='blue',marker='.')
     for i in range(NGEN):
         # Select the next generation individuals
+        print(pop)
         offspring = toolbox.select(pop, len(pop))
-
+        print(offspring)
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
         # Apply crossover and mutation on the offspring
