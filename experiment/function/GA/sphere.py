@@ -15,12 +15,12 @@ creator.create("Individual", list, fitness=creator.FitnessMin)
 
 toolbox = base.Toolbox()
 #toolbox.register("attr_float",random.random)
-toolbox.register("attr_float",random.uniform,-6,6)
+toolbox.register("attr_float",random.uniform,-10,10)
 toolbox.register("individual",tools.initRepeat,creator.Individual,toolbox.attr_float,n=INDSIZE)
 toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 
 
-toolbox.register("evaluate",benchmarks.himmelblau)
+toolbox.register("evaluate",benchmarks.sphere)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.05) #mutFllipBit floatに対して津えるやつ
 toolbox.register("select",tools.selTournament,tournsize=3)
@@ -111,7 +111,8 @@ if __name__=='__main__':
         count_gen += stop_gen
     etime = time.time() - start
     print("count",count)
-    print("stop_gen",count_gen / trials)
+    print("stop_gen",count_gen / 1000)
     print("time",etime)
     expr = tools.selBest(pop,1)[0]
     print(expr)
+    #229
