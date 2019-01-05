@@ -101,7 +101,11 @@ if __name__=='__main__':
     print("pop_num = ",POPNUM)
     print("gen_num ",NGEN)
     count = 0
+<<<<<<< HEAD
     trials = 500
+=======
+    trials = 1000
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
     count_gen = 0
     start = time.time()
     for i in range(trials):
@@ -115,9 +119,12 @@ if __name__=='__main__':
     print("time",etime)
     expr = tools.selBest(pop,1)[0]
     print(expr)
+<<<<<<< HEAD
 """
 count 484
 stop_gen 19.612
 time 28.55293345451355
 [-2.8045726736360628, 3.1320039281325758, -4.024343197241604, -1.6086038267919953, -3.2143948444728854, 0.44169234059247875, 2.7440676935492085]
 """
+=======
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d

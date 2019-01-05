@@ -100,27 +100,45 @@ def main():
         std = abs(sum2 / length - mean**2)**0.5
         #print(gen  ,min(fits) ,max(fits) ,mean ,std)
 
+<<<<<<< HEAD
         if min(fits) <= 0.9407390124845117 + np.exp(-10) :
             stop_gen = gen
             ok_count = 1
             print(ok_count)
             break
+=======
+        if min(fits) <= np.exp(-10):
+            stop_gen = gen
+            ok_count = 1
+            break
+
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
     return pop,hof,ok_count,stop_gen
 
 if __name__=='__main__':
     print("pop_num = ",POPNUM)
     print("gen_num ",NGEN)
     count = 0
+<<<<<<< HEAD
     trials = 500
     count_gen = 0
     start = time.time()
     for i in range(trials):
         pop,hof,ok_count,stop_gen = main()
         print(i)
+=======
+    trials = 1000
+    count_gen = 0
+    start = time.time()
+    for i in range(trials):
+        print(i)
+        pop,hof,ok_count,stop_gen = main()
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
         count += ok_count
         count_gen += stop_gen
     etime = time.time() - start
     print("count",count)
+<<<<<<< HEAD
     print("stop_gen",count_gen / 500)
     print("time",etime)
     expr = tools.selBest(pop,1)[0]
@@ -130,3 +148,10 @@ count 0
 stop_gen 200.0
 time 1254.0345
 """
+=======
+    print("stop_gen",count_gen / 1000)
+    print("time",etime)
+    expr = tools.selBest(pop,1)[0]
+    print(expr)
+    #229
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d

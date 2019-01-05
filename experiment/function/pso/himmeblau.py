@@ -53,7 +53,11 @@ def main():
     best = None
     stop_gen = 200
     ok_count = 0
+<<<<<<< HEAD
     for gen in range(GEN):
+=======
+    for g in range(GEN):
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
 
         for part in pop:
             part.fitness.values = toolbox.evaluate(part)
@@ -89,7 +93,11 @@ def main():
 
 if __name__ == "__main__":
     count = 0
+<<<<<<< HEAD
     trials = 500
+=======
+    trials = 1000
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
     count_gen = 0
     start = time.time()
     for i in range(trials):
@@ -101,8 +109,11 @@ if __name__ == "__main__":
     print("count",count)
     print("stop_gen",count_gen / trials)
     print("time",etime)
+<<<<<<< HEAD
 """
 count 6
 stop_gen 198.846
 time 270.73741936683655
 """
+=======
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
