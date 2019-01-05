@@ -38,7 +38,7 @@ def eval_genomes(genomes, config):
         net = neat.nn.FeedForwardNetwork.create(genome, config)
         final_reward = 0
         total_reward = 0
-        for _ in range(3):
+        for _ in range(1):
             total_novelty = 0
             action_lists = []
             observation = env.reset()
@@ -53,11 +53,11 @@ def eval_genomes(genomes, config):
             #for i in range(len(action_lists) - 1):
               #  total_novelty += np.sqrt((action_lists[i+1][0] - action_lists[i][0])**2 + (action_lists[i+1][1] - action_lists[i][1])**2)
             #final_reward += total_novelty
-        total_reward_fit_list.append(total_reward/3)
+        total_reward_fit_list.append(total_reward/1)
         #total_reward_list.append(final_reward)
         #genome.fitness = final_reward
     #print(str(gen),str(max(total_reward_fit_list)),str(sum(total_reward_fit_list)/150))
-        genome.fitness = total_reward / 3
+        genome.fitness = total_reward / 1
     #with open('liner_novelty.txt',mode='a') as f:
     with open('reward.txt',mode = 'a') as f:
             f.write(str(gen)+ " ")
@@ -96,7 +96,7 @@ def run(config_file):
 
     # Run for up to 300 generations.
 
-    winner = p.run(eval_genomes, 10000)
+    winner = p.run(eval_genomes, 500)
 
     with open('winner-feeedforward','wb') as f:
         pickle.dump(winner,f)

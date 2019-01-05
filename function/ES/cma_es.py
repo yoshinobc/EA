@@ -37,9 +37,10 @@ def main():
         # 新たな世代の個体群を生成
         population = toolbox.generate()
         # 個体群の評価
-
+        """
         for ind in population:
             ax.scatter(ind[0],ind[1],c='blue',marker='.')
+        """
 
         fitnesses = toolbox.map(toolbox.evaluate, population)
         for ind, fit in zip(population, fitnesses):
@@ -62,6 +63,7 @@ def main():
         halloffame_array.append(halloffame[0])
         C_array.append(strategy.C)
         centroid_array.append(strategy.centroid)
+        """
         if len(str(gen))==1:
             plt.savefig('cma_es_pic/00'+str(gen)+'.png')
         elif(len(str(gen))) == 2:
@@ -70,36 +72,9 @@ def main():
             plt.savefig('cma_es_pic/'+str(gen)+'.png')
         #savefig('cma_es_pic/figure'+str(gen)+'.png')
         plt.clf()
-        if min(fits) == 0:
-            break
+        """
+
     # 計算結果を描画
-    """
-    import matplotlib.pyplot as plt
-    import matplotlib.cm as cm
-    from matplotlib.patches import Ellipse
-    plt.ion()
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    X = numpy.arange(-6, 6, 0.1)
-    Y = numpy.arange(-6, 6, 0.1)
-    X, Y = numpy.meshgrid(X, Y)
-    Z = [[benchmarks.rastrigin((x, y))[0] for x, y in zip(xx, yy)]
-         for xx, yy in zip(X, Y)]
-    ax.imshow(Z, cmap=cm.jet, extent=[-5.12, 5.12, -5.12, 5.12])
-    for x, sigma, xmean in zip(halloffame_array, C_array, centroid_array):
-        # 多変量分布の分散を楕円で描画
-        Darray, Bmat = numpy.linalg.eigh(sigma)
-        ax.add_artist(Ellipse((xmean[0], xmean[1]),
-                              numpy.sqrt(Darray[0]),
-                              numpy.sqrt(Darray[1]),
-                              numpy.arctan2(Bmat[1, 0], Bmat[0, 0]) * 180 / numpy.pi,
-                              color="g",
-                              alpha=0.7))
-        ax.plot([x[0]], [x[1]], c='r', marker='o')
-        ax.axis([-6, 6, -6, 6])
-        plt.draw()
-    plt.show(block=True)
-    """
 
 if __name__ == "__main__":
     main()

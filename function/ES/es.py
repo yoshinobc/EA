@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import random
 import array
 
-IND_SIZE = 2
+IND_SIZE = 7
 MIN_VALUE = -6
 MAX_VALUE = -6
 MIN_STRATEGY = 0.5
@@ -48,14 +48,44 @@ toolbox.decorate("mutate", checkStrategy(MIN_STRATEGY))
 def main():
     np.random.seed(64)
     MU, LAMBDA = 10,100
-    pop = toolbox.population(n=MU)
+    population = toolbox.population(n=MU)
     hof = tools.HallOfFame(1)
     stats = tools.Statistics(lambda ind:ind.fitness.values)
     stats.register("avg", np.mean)
     stats.register("std", np.std)
     stats.register("min", np.min)
     stats.register("max", np.max)
-    pop,logbook = algorithms.eaMuCommaLambda(pop,toolbox,mu=MU,lambda_=LAMBDA,cxpb=0.6,mutpb=0.3,ngen=200,stats=stats,halloffame=hof)
+
+    invalid_ind = [ind for ind in population if not ind.fitness.valid]
+    fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+    for ind, fit in zip(invalid_ind, fitnesses):
+        ind.fitness.values = fit
+
+    evaluate(population)
+    stop_gen = MU
+    ok_count = 0
+    for gen in range(NGEN):
+        fitnesses = toolbox.map(func, population)
+        for ind, fit in zip(population, fitnesses):
+            ind.fitness.values = fit
+
+        fits = [ind.fitness.values[0] for ind in population]
+        length = len(population)
+        mean = sum(fits) / length
+        sum2 = sum(x*x for x in fits)
+        std = abs(sum2 / length - mean**2)**0.5
+        #print(gen ,min(fits) ,max(fits) ,mean,std)
+
+        if min(fits) <= np.exp(-10) :
+            ok_count = 1
+            stop_gen = gen
+            break
+
+        offspring = varOr(population, toolbox, lambda_, cxpb, mutpb)
+        evaluate(offspring)
+        population = select(offspring, mu)
+
+    #pop,logbook = algorithms.eaMuCommaLambda(pop,toolbox,mu=MU,lambda_=LAMBDA,cxpb=0.6,mutpb=0.3,ngen=200,stats=stats,halloffame=hof)
 
     return pop,logbook,hof
 

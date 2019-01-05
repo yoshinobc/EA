@@ -20,12 +20,37 @@ toolbox.register("attr_float",random.uniform,-6,6)
 toolbox.register("individual",tools.initRepeat,creator.Individual,toolbox.attr_float,n=INDSIZE)
 toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 
+def selMGG(pop,POPNUM):
+    offspring = []
+    for _ in range(int(POPNUM / 2)):
+        parchild = []
+        if random.random() < 1:
+            parent = toolbox.selectRandom(pop)
+            parchild.append(parent[0])
+            parchild.append(parent[1])
+            for _ in range(C):
+                cp_parent0 = parent[0]
+                cp_parent1 = parent[1]
+                toolbox.mate(cp_parent0,cp_parent1)
+                parchild.append(cp_parent0)
+                parchild.append(cp_parent1)
+                del cp_parent0.fitness.values
+                del cp_parent1.fitness.values
+        fitness = list(map(toolbox.evaluate,parchild))
+        for ind, fit in zip(parchild, fitness):
+            ind.fitness.values = fit
 
-toolbox.register("evaluate",benchmarks.himmelblau)
+        parchild.sort(key = operator.attrgetter('fitness.values'))
+        offspring.append(parchild[0])
+        offspring.append(toolbox.selectRoulette(parchild)[0])
+    return offspring
+
+toolbox.register("evaluate",benchmarks.sphere)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.02) #mutFllipBit floatに対して津えるやつ
+toolbox.register("selectMGG",selMGG)
 toolbox.register("selectRandom",tools.selRandom,k=2)
-toolbox.register("selectWorst",tools.selWorst,k=1)
+toolbox.register("selectBest",tools.selBest,k=1)
 toolbox.register("selectRoulette",tools.selRoulette,k=1)
 
 
@@ -39,39 +64,25 @@ def main():
     stats.register("min", np.min)
     stats.register("max", np.max)
     #pop,hof = algorithms.eaSimple(pop,toolbox,cxpb=0.5,mutpb=0.01,ngen=200,stats=stats,halloffame=hof,verbose=True)
-    fitness = list(map(toolbox.evaluate,np.clip(pop,-6,6)))
-
+    fitness = list(map(toolbox.evaluate,pop))
     for ind, fit in zip(pop, fitness):
         ind.fitness.values = fit
 
     print("gen ","min ","max ","mean")
+    """
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     for ind in pop:
         ax.scatter(ind[0],ind[1],c='blue',marker='.')
+    """
     for gen in range(NGEN):
         fig = plt.figure()
         ax = fig.add_subplot(1,1,1)
         # Select the next generation individuals
-        offspring2 = []
-        for _ in range(int(POPNUM/2)):
-            offspring = toolbox.selectRandom(pop)
-            offspring = list(map(toolbox.clone, offspring))
-            parchild = []
-            for _ in range(C):
-                toolbox.mate(offspring[0],offspring[1])
-                parchild.append(offspring[0])
-                parchild.append(offspring[1])
-            fitness = list(map(toolbox.evaluate,np.clip(parchild,-6,6)))
-            for ind, fit in zip(parchild, fitness):
-                ind.fitness.values = fit
-            parchild.sort(key = operator.attrgetter('fitness.values'))
-            offspring2.append(parchild[0])
-            #offspring2.append(toolbox.selectWorst(parchild)[0])
-            offspring2.append(toolbox.selectRoulette(parchild)[0])
+        offspring = toolbox.selectMGG(pop,len(pop))
 
-        offspring2 = list(map(toolbox.clone,offspring2))
-        for mutant in offspring2:
+        offspring = list(map(toolbox.clone, offspring))
+        for mutant in offspring:
 
             # mutate an individual with probability MUTPB
             if random.random() < MUTPB:
@@ -81,12 +92,12 @@ def main():
         for ind in offspring2:
             ax.scatter(ind[0],ind[1],c='blue',marker='.')
         """
-        fitness = list(map(toolbox.evaluate,np.clip(offspring2,-6,6)))
-        for ind, fit in zip(offspring2, fitness):
+        fitness = list(map(toolbox.evaluate,offspring))
+        for ind, fit in zip(offspring, fitness):
             ind.fitness.values = fit
 
         # The population is entirely replaced by the offspring
-        pop[:] = offspring2
+        pop[:] = offspring
 
         # Gather all the fitnesses in one list and print the stats
         fits = [ind.fitness.values[0] for ind in pop]
@@ -116,5 +127,6 @@ if __name__=='__main__':
     print("pop_num = ",POPNUM)
     print("gen_num ",NGEN)
     pop,hof = main()
+    print(hof)
     expr = tools.selBest(pop,1)[0]
-    print(expr)
+    print(expr,expr.fitness)

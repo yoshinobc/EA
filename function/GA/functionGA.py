@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import random
 
 NGEN = 100
-POPNUM = 15
+POPNUM = 150
 INDSIZE = 2
 CXPB = 0.5
 MUTPB = 0.01
@@ -41,15 +41,15 @@ def main():
         ind.fitness.values = fit
 
     print("gen ","min ","max ","mean")
+    """
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     for ind in pop:
         ax.scatter(ind[0],ind[1],c='blue',marker='.')
+    """
     for i in range(NGEN):
         # Select the next generation individuals
-        print(pop)
         offspring = toolbox.select(pop, len(pop))
-        print(offspring)
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
         # Apply crossover and mutation on the offspring
