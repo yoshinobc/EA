@@ -52,7 +52,7 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
-        #print(gen ,min(fits) ,max(fits) ,mean,std)
+        print(gen ,min(fits) ,max(fits) ,mean,std)
 
         if min(fits) <= np.exp(-10) :
             ok_count = 1

@@ -88,13 +88,21 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
-        #print(gen  ,min(fits) ,max(fits) ,mean ,std)
-
+        print(gen  ,min(fits) ,max(fits) ,mean ,std)
+        with open('sphere.txt',mode='a') as f:
+            f.write(str(gen))
+            f.write(" ")
+            f.write(str(min(fits)))
+            f.write(" ")
+            f.write(str(mean))
+            f.write("\n")
+        """
+        [6.925440037655089e-15, -1.072555672736674e-14, -7.588459839624548e-15, 7.018358773828312e-16, 2.792495389854198e-17, 4.4237704423176146e-15, 1.5693139119149428e-15]
         if min(fits) <= np.exp(-10):
             stop_gen = gen
             ok_count = 1
             break
-
+        """
     return pop,hof,ok_count,stop_gen
 
 if __name__=='__main__':
@@ -104,7 +112,7 @@ if __name__=='__main__':
     trials = 1000
     count_gen = 0
     start = time.time()
-    for i in range(trials):
+    for i in range(1):
         print(i)
         pop,hof,ok_count,stop_gen = main()
         count += ok_count

@@ -98,12 +98,21 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
-        #print(gen  ,min(fits) ,max(fits) ,mean ,std)
-
+        print(gen  ,min(fits) ,max(fits) ,mean ,std)
+        with open('dc.txt',mode='a') as f:
+            f.write(str(gen))
+            f.write(" ")
+            f.write(str(min(fits)))
+            f.write(" ")
+            f.write(str(mean))
+            f.write("\n")
+        """
+        [-2.0000000000000306, -1.9999999999999813, -2.00000000000002, -1.9999999999998765, -1.999999999999882, -2.0000000000000737, -1.999999999999701]
         if min(fits) <= np.exp(-10):
             stop_gen = gen
             ok_count = 1
             break
+        """
 
     return pop,hof,ok_count,stop_gen
 
@@ -114,7 +123,7 @@ if __name__=='__main__':
     trials = 1000
     count_gen = 0
     start = time.time()
-    for i in range(trials):
+    for i in range(1):
         print(i)
         pop,hof,ok_count,stop_gen = main()
         count += ok_count

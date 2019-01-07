@@ -60,6 +60,8 @@ def main():
     for gen in range(NGEN):
         fig = plt.figure()
         ax = fig.add_subplot(1,1,1)
+        ax.set_xlim([-6,6])
+        ax.set_ylim([-6,6])
         Z = numpy.power((numpy.power(X,2) + Y - mapping(gen)),2) + numpy.power((X + numpy.power(Y,2) - mapping(gen)),2)
         def func(pop):
             pop = numpy.clip(pop,-6,6)

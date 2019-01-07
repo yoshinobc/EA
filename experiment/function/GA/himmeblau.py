@@ -7,7 +7,7 @@ import time
 
 NGEN = 200
 POPNUM = 150
-INDSIZE = 7
+INDSIZE = 2
 CXPB = 0.5
 MUTPB = 0.01
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -88,13 +88,22 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
-        #print(gen  ,min(fits) ,max(fits) ,mean ,std)
+        print(gen  ,min(fits) ,max(fits) ,mean ,std)
 
+        with open('himmelblau.txt',mode='a') as f:
+            f.write(str(gen))
+            f.write(" ")
+            f.write(str(min(fits)))
+            f.write(" ")
+            f.write(str(mean))
+            f.write("\n")
+        """
+        [3.0, 2.0]
         if min(fits) <= np.exp(-10):
             stop_gen = gen
             ok_count = 1
             break
-
+        """
     return pop,hof,ok_count,stop_gen
 
 if __name__=='__main__':
@@ -104,7 +113,7 @@ if __name__=='__main__':
     trials = 1000
     count_gen = 0
     start = time.time()
-    for i in range(trials):
+    for i in range(1):
         print(i)
         pop,hof,ok_count,stop_gen = main()
         count += ok_count
