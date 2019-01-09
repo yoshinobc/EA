@@ -3,7 +3,6 @@
 
 # In[2]:
 import numpy as np
-import ActivationFunction
 
 class NNN:
 # In[3]:
@@ -44,47 +43,51 @@ class NNN:
 
         return X
 
-
     # In[4]:
 
 
     def forward(network,X):
-        """
-        W1, W2, W3 = network['W1'], network['W2'], network['W3']
-        b1, b2, b3 = network['B1'], network['B2'], network['B3']
-        a1 = np.dot(X,W1) + b1
-        z1 = ActivationFunction.sigmoid_function(a1)
-        a2 = np.dot(z1,W2) + b2
-        z2 = ActivationFunction.sigmoid_function(a2)
-        a3 = np.dot(z2,W3) + b3
-        y = ActivationFunction.sigmoid_function(a3)
-        """
-        W1, W2, W3 = network['W1'], network['W2'], network['W3']
-        b1, b2, b3 = network['B1'], network['B2'], network['B3']
-        a1 = np.dot(X,W1) + b1
-        z1 = ActivationFunction.sigmoid_function(a1)
-        a2 = np.dot(z1,W2) + b2
-        z2 = ActivationFunction.sigmoid_function(a2)
-        a3 = np.dot(z2,W3) + b3
-        y = ActivationFunction.sigmoid_function(a3)
+        def sigmoid2(x):
+            return (1-np.exp(-x))/(1+np.exp(-x))
 
-        return y
+        def sigmoid(x):
+            import scipy.special
+            return scipy.special.expit(x)
+        """
+        W1, W2, W3 = network['W1'], network['W2'], network['W3']
+        b1, b2, b3 = network['B1'], network['B2'], network['B3']
+        a1 = np.dot(X,W1) + b1
+        z1 = ActivationFunction.sigmoid_function(a1)
+        a2 = np.dot(z1,W2) + b2
+        z2 = ActivationFunction.sigmoid_function(a2)
+        a3 = np.dot(z2,W3) + b3
+        y = ActivationFunction.sigmoid_function(a3)
+        """
+        #W1, W2, W3 = network['W1'], network['W2'], network['W3']
+        #b1, b2, b3 = network['B1'], network['B2'], network['B3']
+        W1, W2 = network['W1'], network['W2']
+        b1, b2 = network['B1'], network['B2']
+        a1 = np.dot(X,W1) + b1
+        z1 = a1
+        a2 = np.dot(z1,W2) + b2
+        z2 = a2
+        #a3 = np.dot(z2,W3) + b3
+        #y = (sigmoid(a3) - 0.5) * 2
+        y = (sigmoid(z2) - 0.5) * 2
+        return y[0]
 
 
     # In[ ]:
 
+#nanがどこからきてるのか確認
 
-    def Classification_two(y):
-        if(y>0.5):
-            return 1
-        else :
-            return 0
 
 
     # In[2]:
 
 
     def update(self,individual):
+        """
         self.network['W1'] = np.reshape(individual[:12],(4,3))
         self.network['B1'] = np.reshape(individual[12:15],(1,3))
         self.network['W2'] = np.reshape(individual[15:21],(3,2))
@@ -92,13 +95,17 @@ class NNN:
         self.network['W3'] = np.reshape(individual[23:25],(2,1))
         self.network['B3'] = np.reshape(individual[25:26],(1,1))
         """
-        self.network['W1'] = np.reshape(individual[:24],(4,6))
-        self.network['B1'] = np.reshape(individual[24:30],(1,6))
-        self.network['W2'] = np.reshape(individual[30:48],(6,3))
-        self.network['B2'] = np.reshape(individual[48:51],(1,3))
-        self.network['W3'] = np.reshape(individual[51:54],(3,1))
-        self.network['B3'] = np.reshape(individual[54:55],(1,1))
-        """
+        #self.network['W1'] = np.reshape(individual[:384],(24,16))
+        #self.network['B1'] = np.reshape(individual[384:400],(1,16))
+        #self.network['W2'] = np.reshape(individual[400:528],(16,8))
+        #self.network['B2'] = np.reshape(individual[528:536],(1,8))
+        #self.network['W3'] = np.reshape(individual[536:568],(8,4))
+        #self.network['B3'] = np.reshape(individual[568:572],(1,4))
+        self.network['W1'] = np.reshape(individual[:240],(24,10))
+        self.network['B1'] = np.reshape(individual[240:250],(1,10))
+        self.network['W2'] = np.reshape(individual[250:290],(10,4))
+        self.network['B2'] = np.reshape(individual[290:294],(1,4))
+
         """
         self.network['W1'] = np.reshape(individual[:24],(4,6))
         self.network['B1'] = np.reshape(individual[24:30],(1,6))
@@ -122,76 +129,8 @@ class NNN:
     # In[3]:
 
 
-    def conclusion(self,observation,individual,network):
+    def conclusion(self,observation,network):
         X = observation
         y = NNN.forward(network,X)
-        action = NNN.Classification_two(y)
+        action = y
         return action
-
-class NNN2:
-# In[3]:
-    def __init__(self):
-        self.network = {}
-    # In[1]:
-
-    def create_input_neuron(self,observation):
-        X = observation
-
-        return X
-
-    # In[4]:
-
-
-    def forward(network,X):
-        W1, W2, W3 = network['W1'], network['W2'], network['W3']
-        b1, b2, b3 = network['B1'], network['B2'], network['B3']
-        a1 = np.dot(X,W1) + b1
-        z1 = ActivationFunction.relu_function(a1)
-        a2 = np.dot(z1,W2) + b2
-        z2 = ActivationFunction.relu_function(a2)
-        a3 = np.dot(z2,W3) + b3
-        y = ActivationFunction.softmax(a3)
-
-        return y
-
-
-    # In[ ]:
-    def sigmoid2(x):
-        return (1+np.exp(-x))/(1-np.exp(-x))
-
-    def Classification_two(y):
-        if(y>0.5):
-            return 1
-        else :
-            return 0
-
-
-    # In[2]:
-
-
-    def update(self,individual):
-        self.network['W1'] = np.reshape(individual[:24],(4,6))
-        self.network['B1'] = np.reshape(individual[24:30],(1,6))
-        self.network['W2'] = np.reshape(individual[30:48],(6,3))
-        self.network['B2'] = np.reshape(individual[48:51],(1,3))
-        self.network['W3'] = np.reshape(individual[51:54],(3,1))
-        self.network['B3'] = np.reshape(individual[54:55],(1,1))
-
-        return self.network
-
-    # In[3]:
-
-
-    def conclusion(self,observation,individual,network):
-        X = observation
-        y = NNN.forward(network,X)
-        action = NNN.Classification_two(y)
-        return action
-
-    # 染色体：26
-    # W1:0-12
-    # reshahpe{4,3]
-    # B1:13-16
-
-#始めに定義される遺伝子がすべて等しいので学習が進まない
-#ランダムに遺伝子を生成させ，その中からNNを定義する．

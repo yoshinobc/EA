@@ -21,7 +21,10 @@ from deap import algorithms
 nn = NNN()
 ENV = gym.make("CartPole-v2")
 MAX_STEPS = 5000
+NGEN = 300
 w_list = []
+CXPB = 0.5
+MUTPB = 0.2
 # In[9]:
 
 creator.create("FitnessMax",base.Fitness,weights=[1.0])
@@ -90,21 +93,22 @@ def EV(individual):
         return episode_reward
 
     network = nn.update(individual); #networkにindividualを適用
-    for _ in range(3):
+    for _ in range(1):
+        observation = ENV.reset()
         while True:
             action = get_action(observation,individual,network)
             observation_next,reward,done,info_not = ENV.step(action)
-
-            if done:
-                ENV.render()
-                break
-
             observation = observation_next
             episode_reward += reward
+            if done:
+                #ENV.render()
+                break
 
-            ENV.render()
 
-        return [episode_reward]
+
+            #ENV.render()
+    episode_reward /= 1
+    return [episode_reward]
 
 toolbox.register("evaluate",EV)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
@@ -177,13 +181,13 @@ def main():
         #print("gen:",i,"  Min %s" % min(fits),"  Max %s" % max(fits),"  Avg %s" % mean,"  Std %s" % std)
         print(i,max(fits),mean)
 
-    with open('CartPole-v2.txt',mode='a') as f:
-        f.write(str(i))
-        f.write(" ")
-        f.write(str(max(fits)))
-        f.write(" ")
-        f.write(str(mean))
-        f.write("\n")
+        with open('CartPole-v2.txt',mode='a') as f:
+            f.write(str(i))
+            f.write(" ")
+            f.write(str(max(fits)))
+            f.write(" ")
+            f.write(str(mean))
+            f.write("\n")
     """
     if i%50 == 0:
         with open('gen'+str(i)+'checkpoint_maxstepsliner_hardcore','wb') as fp:
