@@ -98,6 +98,7 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
+<<<<<<< HEAD
         print(gen  ,min(fits) ,max(fits) ,mean ,std)
         with open('dc.txt',mode='a') as f:
             f.write(str(gen))
@@ -108,30 +109,63 @@ def main():
             f.write("\n")
         """
         [-2.0000000000000306, -1.9999999999999813, -2.00000000000002, -1.9999999999998765, -1.999999999999882, -2.0000000000000737, -1.999999999999701]
+=======
+        #print(gen  ,min(fits) ,max(fits) ,mean ,std)
+
+<<<<<<< HEAD
+        if min(fits) <= 0.9407390124845117 + np.exp(-10) :
+            stop_gen = gen
+            ok_count = 1
+            print(ok_count)
+            break
+=======
+>>>>>>> 149d23996d84c4960a2b23273501a9dacb2353ea
         if min(fits) <= np.exp(-10):
             stop_gen = gen
             ok_count = 1
             break
         """
 
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
     return pop,hof,ok_count,stop_gen
 
 if __name__=='__main__':
     print("pop_num = ",POPNUM)
     print("gen_num ",NGEN)
     count = 0
+<<<<<<< HEAD
+    trials = 500
+    count_gen = 0
+    start = time.time()
+    for i in range(trials):
+        pop,hof,ok_count,stop_gen = main()
+        print(i)
+=======
     trials = 1000
     count_gen = 0
     start = time.time()
     for i in range(1):
         print(i)
         pop,hof,ok_count,stop_gen = main()
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
         count += ok_count
         count_gen += stop_gen
     etime = time.time() - start
     print("count",count)
+<<<<<<< HEAD
+    print("stop_gen",count_gen / 500)
+    print("time",etime)
+    expr = tools.selBest(pop,1)[0]
+    print(expr)
+"""
+count 0
+stop_gen 200.0
+time 1254.0345
+"""
+=======
     print("stop_gen",count_gen / 1000)
     print("time",etime)
     expr = tools.selBest(pop,1)[0]
     print(expr)
     #229
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d

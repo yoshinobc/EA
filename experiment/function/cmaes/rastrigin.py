@@ -73,12 +73,26 @@ if __name__ == "__main__":
     count = 0
     sum_gen = 0
     start = time.time()
+<<<<<<< HEAD
+    for i in range(500):
+=======
     for i in range(1000):
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
         print(i)
         pop,ok_count,stop_gen = main()
         count += ok_count
         sum_gen += stop_gen
     episode_time = time.time() - start
     print("count",count)
+<<<<<<< HEAD
+    print("sum_gen",sum_gen / 500)
+    print("time",episode_time)
+"""
+count 0
+sum_gen 200.0
+time 254.15487122535706
+"""
+=======
     print("sum_gen",sum_gen / 1000)
     print("time",episode_time)
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d

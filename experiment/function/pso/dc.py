@@ -9,6 +9,16 @@ from deap import creator
 from deap import tools
 
 def func(pop):
+<<<<<<< HEAD
+      """
+      if pop[0] < -5 or pop[0] > 5 or pop[1] < -5 or pop[1] > 5:
+          return 100000,
+      pop = np.clip(pop,-5,5)
+      """
+      _x = pop[0]
+      _y = pop[1]
+=======
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
       return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2,-2,-2,-2,-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4,4,4,4,4,4],  axis=0) + 1)),
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -39,7 +49,11 @@ toolbox = base.Toolbox()
 toolbox.register("particle", generate, size=7, pmin=-5, pmax=5, smin=-3, smax=3)
 toolbox.register("population", tools.initRepeat, list, toolbox.particle)
 toolbox.register("update", updateParticle, phi1=2.0, phi2=2.0)
+<<<<<<< HEAD
+#toolbox.register("evaluate", benchmarks.shekel(a = [[-2,-2,-2,-2,-2,-2,-2],[4,4,4,4,4,4,4]],c = [0.002,0.005]))
+=======
 toolbox.register("evaluate", benchmarks.himmelblau)
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
 
 def main():
     pop = toolbox.population(n=150)
@@ -53,10 +67,17 @@ def main():
     best = None
     stop_gen = 200
     ok_count = 0
+<<<<<<< HEAD
+    for gen in range(GEN):
+
+        for part in pop:
+            part.fitness.values = func(part)
+=======
     for g in range(GEN):
 
         for part in pop:
             part.fitness.values = toolbox.evaluate(part)
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
             if not part.best or part.best.fitness < part.fitness:
                 part.best = creator.Particle(part)
                 part.best.fitness.values = part.fitness.values
@@ -74,7 +95,11 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
+<<<<<<< HEAD
+        if min(fits) <= 0.9407390124845117 + np.exp(-10) :
+=======
         if min(fits) <= np.exp(-10):
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
             stop_gen = gen
             ok_count = 1
             break
@@ -90,15 +115,32 @@ def main():
 
 if __name__ == "__main__":
     count = 0
+<<<<<<< HEAD
+    trials = 500
+    count_gen = 0
+    start = time.time()
+    for i in range(trials):
+        pop,logbook,best,stop_gen,ok_count = main()
+        print(i,ok_count)
+=======
     trials = 1000
     count_gen = 0
     start = time.time()
     for i in range(trials):
         print(i)
         pop,logbook,best,stop_gen,ok_count = main()
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
         count += ok_count
         count_gen += stop_gen
     etime = time.time() - start
     print("count",count)
     print("stop_gen",count_gen / trials)
     print("time",etime)
+<<<<<<< HEAD
+"""
+count 500
+stop_gen 37.512
+time 102.77915549278259
+"""
+=======
+>>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d

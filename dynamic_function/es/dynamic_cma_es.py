@@ -10,7 +10,7 @@ from deap import tools
 import matplotlib.pyplot as plt
 
 N = 2  # 問題の次元
-NGEN = 300  # 総ステップ数
+NGEN = 100  # 総ステップ数
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 creator.create("Individual", list, fitness=creator.FitnessMin)
@@ -35,9 +35,9 @@ def map(gen):
 
 def main():
     numpy.random.seed(64)
-
+    sum_min = 0
     # The CMA-ES algorithm
-    strategy = cma.Strategy(centroid=[5.0]*N, sigma=3.0, lambda_=20*N)
+    strategy = cma.Strategy(centroid=[5.0]*N, sigma=3.0, lambda_=150)
     toolbox.register("generate", strategy.generate, creator.Individual)
     toolbox.register("update", strategy.update)
 
@@ -92,7 +92,7 @@ def main():
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
         print(gen ,min(fits) ,max(fits) ,mean,std)
-
+        sum_min += min(fits)
         # 個体群の評価から次世代の計算のためのパラメタ更新
         toolbox.update(population)
 
@@ -111,8 +111,7 @@ def main():
         #savefig('cma_es_pic/figure'+str(gen)+'.png')
         plt.clf()
         #plt.closed()
-        if min(fits) == 0:
-            break
+    print(sum_min / 100)
     # 計算結果を描画
     """
     import matplotlib.pyplot as plt

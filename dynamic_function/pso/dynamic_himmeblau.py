@@ -55,7 +55,7 @@ toolbox.register("update", updateParticle, phi1=2.0, phi2=2.0)
 toolbox.register("evaluate", benchmarks.himmelblau)
 
 def main():
-    pop = toolbox.population(n=100)
+    pop = toolbox.population(n=150)
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", numpy.mean)
     stats.register("std", numpy.std)
@@ -70,7 +70,7 @@ def main():
 
     x = numpy.arange(-6, 6, 0.05) #x軸の描画範囲の生成。0から10まで0.05刻み。
     y = numpy.arange(-6, 6, 0.05) #y軸の描画範囲の生成。0から10まで0.05刻み。
-
+    sum_min = 0
     X, Y = numpy.meshgrid(x, y)
     for gen in range(GEN):
         fig = plt.figure()
@@ -84,14 +84,14 @@ def main():
             Y = pop[1]
             return numpy.power((numpy.power(X,2) + Y - mapping(gen)),2) + numpy.power((X + numpy.power(Y,2) - mapping(gen)),2)   # 表示する計算式の指定。等高線はZに対して作られる。
         #Z = (1 - 1/(1 + 0.05 * (np.power(X,2)+(np.power((Y - 10),2)))) - 1/(1 + 0.05*(np.power((X - 10),2) + np.power(Y,2))) - 1/(1 + 0.03*(np.power((X + 10),2) + np.power(Y,2))) - 1/(1 + 0.05*(np.power((X - 5),2) + np.power((Y + 10),2))) - 1/(1 + 0.1*(np.power((X + 5),2) + np.power((Y + 10),2))))*(1 + 0.0001*np.power((np.power(X,2) + np.power(Y,2)),1.2))
-        #plt.pcolormesh(X, Y, Z, cmap='hsv') # 等高線図の生成。cmapで色付けの規則を指定する。
-        plt.pcolormesh(X, Y, Z,cmap='hsv') # 等高線図の生成。cmapで色付けの規則を指定す
+        plt.pcolormesh(X, Y, Z, cmap='hsv') # 等高線図の生成。cmapで色付けの規則を指定する。
+        #plt.pcolormesh(X, Y, Z,cmap='hsv') # 等高線図の生成。cmapで色付けの規則を指定す
         #pp=plt.colorbar (orientation="vertical") # カラーバーの表示
         #pp.set_label("Label", fontname="Arial", fontsize=24) #カラーバーのラベル
-
+        """
         plt.xlabel('X', fontsize=24)
         plt.ylabel('Y', fontsize=24)
-
+        """
         for part in pop:
             part.fitness.values = toolbox.evaluate(part)
             if not part.best or part.best.fitness < part.fitness:
@@ -108,7 +108,7 @@ def main():
 
         # Gather all the fitnesses in one list and print the stats
         logbook.record(gen=gen, evals=len(pop), **stats.compile(pop))
-        print(logbook.stream)
+        sum_min += (logbook.select("min")[0])
 
         if len(str(gen))==1:
             plt.savefig('pso_pic/00'+str(gen)+'.png')
@@ -116,9 +116,11 @@ def main():
             plt.savefig('pso_pic/0'+str(gen)+'.png')
         elif(len(str(gen))) == 3:
             plt.savefig('pso_pic/'+str(gen)+'.png')
+
         #savefig('cma_es_pic/figure'+str(gen)+'.png')
         plt.clf()
         plt.close()
+    print(sum_min / 100)
     return pop, logbook, best
 
 if __name__ == "__main__":
