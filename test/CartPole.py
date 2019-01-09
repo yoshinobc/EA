@@ -9,9 +9,9 @@ import time
 import  networkx as nx
 import matplotlib.pyplot as plt
 
-ENV = gym.make("CartPole-v1")
-MAX_STEPS=1000
-NGEN=40
+ENV = gym.make("CartPole-v2")
+MAX_STEPS=5000
+NGEN=300
 
 def safeDiv(left,right):
     if(right==0):
@@ -102,7 +102,7 @@ class Myclass:
         gen.append(i)
 def main():
         random.seed(1)
-        pop = toolbox.population(n=150)
+        pop = toolbox.population(n=250)
         hof = tools.HallOfFame(1)
 
         stats_fit= tools.Statistics(lambda ind: ind.fitness.values)

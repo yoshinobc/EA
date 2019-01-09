@@ -176,8 +176,8 @@ def main():
 
         mstats = tools.MultiStatistics(fitness=stats_fit,size=stats_size)
         mstats.register("avg", np.mean)
-        mstats.register("std", np.std)
-        mstats.register("min", np.min)
+        #mstats.register("std", np.std)
+        #mstats.register("min", np.min)
         mstats.register("max", np.max)
         CXPB=0.4
         MUTPB=0.1
