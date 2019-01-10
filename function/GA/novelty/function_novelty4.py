@@ -27,7 +27,7 @@ class noveltymap:
 
     def insertInd(self,xy,novelty,fitness):
         self.map.append(novind(xy,novelty,fitness))
-        self.ax.scatter(xy[0],xy[1],c='red',marker='.')
+        #self.ax.scatter(xy[0],xy[1],c='red',marker='.')
 
     def calFit(self,ind):
         return benchmarks.himmelblau(ind)[0]
@@ -43,9 +43,9 @@ class noveltymap:
         return sorted(self.map,key=lambda u:u.novelty)[:self.popnum]
 
 
-NGEN = 100
+NGEN = 300
 POPNUM = 150
-N = 2
+N = 7
 INDSIZE = N
 CXPB = 0.5
 MUTPB = 0.01
@@ -64,6 +64,8 @@ toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.05) #mutFllipBit floatに対して津えるやつ
 toolbox.register("select",tools.selTournament,tournsize=3)
 
+def func(pop):
+      return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2,-2,-2,-2,-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4,4,4,4,4,4],  axis=0) + 1)),
 
 
 def main():
@@ -76,7 +78,7 @@ def main():
     stats.register("min", np.min)
     stats.register("max", np.max)
     #pop,hof = algorithms.eaSimple(pop,toolbox,cxpb=0.5,mutpb=0.01,ngen=200,stats=stats,halloffame=hof,verbose=True)
-    fitness = list(map(toolbox.evaluate,np.clip(pop,-6,6)))
+    fitness = list(map(func,np.clip(pop,-6,6)))
 
     for ind, fit in zip(pop, fitness):
         ind.fitness.values = fit
@@ -109,6 +111,7 @@ def main():
                 toolbox.mutate(mutant)
                 del mutant.fitness.values
         if novflag == 2:
+            print("nov")
             _pop = nvmap.popInd(pop)
             for off ,_ind in zip(offspring,_pop):
                 off = _ind.xy
@@ -117,10 +120,11 @@ def main():
                 fits = [benchmarks.himmelblau(ind)[0] for ind in pop]
         else:
             invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
-
+            """
             for ind in invalid_ind:
                 nvmap.ax.scatter(ind[0],ind[1],c='blue',marker='.')
-            fitness = list(map(toolbox.evaluate,np.clip(invalid_ind,-6,6)))
+            """
+            fitness = list(map(func,np.clip(invalid_ind,-6,6)))
             for ind, fit in zip(invalid_ind, fitness):
                 ind.fitness.values = fit
 
@@ -146,8 +150,8 @@ def main():
         #print("gen:",i,"  Min %s" % min(fits),"  Max %s" % max(fits),"  Avg %s" % mean,"  Std %s" % std)
         #print(i,max(fits),mean)
 
-    nvmap.fig.show()
-    time.sleep(100000000)
+    #nvmap.fig.show()
+    #time.sleep(100000000)
     return pop,hof
 
 if __name__=='__main__':
