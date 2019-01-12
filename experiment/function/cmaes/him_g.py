@@ -49,7 +49,7 @@ def main():
         # 個体群の評価
 
 
-        fitnesses = toolbox.map(func, population,)
+        fitnesses = toolbox.map(toolbox.evaluate, population,)
 
         for ind, fit in zip(population, fitnesses):
             ind.fitness.values = fit
@@ -60,6 +60,13 @@ def main():
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
         print(gen ,min(fits) ,max(fits) ,mean,std)
+        with open('himmelblau.txt',mode='a') as f:
+            f.write(str(gen))
+            f.write(" ")
+            f.write(str(min(fits)))
+            f.write(" ")
+            f.write(str(mean))
+            f.write("\n")
         """
         if min(fits) <= np.exp(-10) :
             ok_count = 1
@@ -91,12 +98,3 @@ if __name__ == "__main__":
     print("count",count)
     print("sum_gen",sum_gen / 500)
     print("time",episode_time)
-"""
-count 0
-sum_gen 200.0
-time 658.8345928192139
-"""
-=======
-    print("sum_gen",sum_gen / 1000)
-    print("time",episode_time)
->>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d

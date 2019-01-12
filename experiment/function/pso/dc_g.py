@@ -9,7 +9,7 @@ from deap import creator
 from deap import tools
 
 def func(pop):
-      return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2,-2,-2,-2,-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4,4,4,4,4,4],  axis=0) + 1)),
+      return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4],  axis=0) + 1)),
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 creator.create("Particle", list, fitness=creator.FitnessMin, speed=list,
@@ -36,11 +36,10 @@ def updateParticle(part, best, phi1, phi2):
     part[:] = list(map(operator.add, part, part.speed))
 
 toolbox = base.Toolbox()
-toolbox.register("particle", generate, size=7, pmin=-5, pmax=5, smin=-3, smax=3)
+toolbox.register("particle", generate, size=2, pmin=-5, pmax=5, smin=-3, smax=3)
 toolbox.register("population", tools.initRepeat, list, toolbox.particle)
 toolbox.register("update", updateParticle, phi1=2.0, phi2=2.0)
 
-toolbox.register("evaluate", benchmarks.griewank)
 
 
 def main():
@@ -56,15 +55,10 @@ def main():
     stop_gen = 200
     ok_count = 0
 
-    for gen in range(GEN):
-
-        for part in pop:
-            part.fitness.values = toolbox.evaluate(part)
-
     for g in range(GEN):
 
         for part in pop:
-            part.fitness.values = toolbox.evaluate(part)
+            part.fitness.values = func(part)
 
             if not part.best or part.best.fitness < part.fitness:
                 part.best = creator.Particle(part)
@@ -73,7 +67,7 @@ def main():
                 best = creator.Particle(part)
                 best.fitness.values = part.fitness.values
 
-        fitnesses = toolbox.map(toolbox.evaluate, pop)
+        fitnesses = toolbox.map(func, pop)
         for ind, fit in zip(pop, fitnesses):
             ind.fitness.values = fit
 
@@ -84,8 +78,8 @@ def main():
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
 
-        with open('griewank.txt',mode='a') as f:
-            f.write(str(gen))
+        with open('dc.txt',mode='a') as f:
+            f.write(str(g))
             f.write(" ")
             f.write(str(min(fits)))
             f.write(" ")

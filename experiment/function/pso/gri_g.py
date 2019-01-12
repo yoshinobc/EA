@@ -36,7 +36,7 @@ def updateParticle(part, best, phi1, phi2):
     part[:] = list(map(operator.add, part, part.speed))
 
 toolbox = base.Toolbox()
-toolbox.register("particle", generate, size=7, pmin=-5, pmax=5, smin=-3, smax=3)
+toolbox.register("particle", generate, size=7, pmin=-10, pmax=10, smin=-3, smax=3)
 toolbox.register("population", tools.initRepeat, list, toolbox.particle)
 toolbox.register("update", updateParticle, phi1=2.0, phi2=2.0)
 
@@ -83,9 +83,9 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
-
+        print(gen,min(fits),mean)
         with open('griewank.txt',mode='a') as f:
-            f.write(str(gen))
+            f.write(str(g))
             f.write(" ")
             f.write(str(min(fits)))
             f.write(" ")

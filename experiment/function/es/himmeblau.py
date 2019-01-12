@@ -6,7 +6,7 @@ import array
 from deap.algorithms import varOr
 import time
 
-IND_SIZE = 7
+IND_SIZE = 2
 MIN_VALUE = -6
 MAX_VALUE = -6
 MIN_STRATEGY = 0.5
@@ -119,14 +119,14 @@ def main():
         population = toolbox.select(offspring, MU)
     """
     pop,logbook,stop_gen,ok_count = algorithms.eaMuCommaLambda(population,toolbox,mu=MU,lambda_=LAMBDA,cxpb=0.6,mutpb=0.3,ngen=200,stats=stats,halloffame=hof)
-
+    print(logbook["min"])
     return population,stop_gen,ok_count
 
 if __name__=='__main__':
     count = 0
     sum_gen = 0
     start = time.time()
-    for i in range(1000):
+    for i in range(1):
         print(i)
         pop,ok_count,stop_gen = main()
         count += ok_count
