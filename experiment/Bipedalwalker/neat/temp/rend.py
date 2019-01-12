@@ -28,11 +28,13 @@ def eval_genomes(genomes, config):
             for i in range(5000):
                 action = net.activate(observation)
                 action = np.clip(action,-1,1)
+                env.render()
                 observation,reward,done,info = env.step(action)
                 episode_reward += reward
             #if (-4.8  > observation[0]) or (observation[0] > 4.8) or (0.017453292519943 < observation[3] < -0.017453292519943) or (episode_reward >= MAX_STEPS):
                 if done:
                     env.reset()
+                    print(episode_reward)
                     break
         genome.fitness = episode_reward / 1
 
@@ -41,7 +43,7 @@ def eval_genomes(genomes, config):
             winner = genome
     print(max_episode_fitness)
     winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
-    env = wrappers.Monitor(env, '/home/bc/Documents/EA/experiment/Bipedalwalker/neat/movies', force=True)
+    #env = wrappers.Monitor(env, '/home/bc/Documents/EA/experiment/Bipedalwalker/neat/movies', force=True)
     observation = env.reset()
     for i in range(5000):
             action = winner_net.activate(observation)
@@ -53,15 +55,15 @@ def eval_genomes(genomes, config):
             if done:
                 observation = env.reset()
                 break
-        """
-        for n, g in enumerate([winner]):
-            name = 'winner-{0}'.format(n)
-            with open(name+'.pickle', 'wb') as f:
-                pickle.dump(g, f)
 
-            visualize.draw_net(config, g, view=False, filename=str(count)+name + "-net.gv")
-            visualize.draw_net(config, g, view=False, filename=str(count)+"net-enabled.gv",show_disabled=False)
-        """
+        
+        #for n, g in enumerate([winner]):
+        #    name = 'winner-{0}'.format(n)
+        #    with open(name+'.pickle', 'wb') as f:
+        #        pickle.dump(g, f)
+
+        #    visualize.draw_net(config, g, view=False, filename=str(count)+name + "-net.gv")
+        #    visualize.draw_net(config, g, view=False, filename=str(count)+"net-enabled.gv",show_disabled=False)
     count +=1
 
 def run(config_file):
@@ -73,7 +75,7 @@ def run(config_file):
 
     # Create the population, which is the top-level object for a NEAT run.
     #p = neat.Population(config)
-    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-176')
+    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-153')
     # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()
