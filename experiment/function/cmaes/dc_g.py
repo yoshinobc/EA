@@ -59,7 +59,7 @@ def main():
         mean = sum(fits) / length
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
-        print(gen ,min(fits) ,max(fits) ,mean,std)
+        #print(gen ,min(fits) ,max(fits) ,mean,std)
         with open('dc.txt',mode='a') as f:
             f.write(str(gen))
             f.write(" ")
@@ -82,19 +82,19 @@ def main():
         halloffame_array.append(halloffame[0])
         C_array.append(strategy.C)
         centroid_array.append(strategy.centroid)
-    print(halloffame)
-    return population,ok_count,stop_gen
+    #print(halloffame)
+    return population,ok_count,stop_gen,halloffame
     # 計算結果を描画
 
 if __name__ == "__main__":
     count = 0
     sum_gen = 0
     start = time.time()
-    for i in range(1):
-        print(i)
-        pop,ok_count,stop_gen = main()
+    for i in range(500):
+        pop,ok_count,stop_gen,hof = main()
         count += ok_count
         sum_gen += stop_gen
+        print(i,ok_count,hof)
     episode_time = time.time() - start
     print("count",count)
     print("sum_gen",sum_gen / 500)

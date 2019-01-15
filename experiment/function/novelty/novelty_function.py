@@ -15,7 +15,7 @@ class novind:
 
 class noveltymap:
     def __init__(self,k,popnum):
-        print("make noveltymap")
+        #print("make noveltymap")
         self.map = []
         self.k = k
         self.popnum = popnum
@@ -30,7 +30,7 @@ class noveltymap:
         #self.ax.scatter(xy[0],xy[1],c='red',marker='.')
 
     def calFit(self,ind):
-        return benchmarks.himmelblau(ind)[0]
+        return benchmarks.rastrigin(ind)[0]
 
     def popInd(self,population):
         for ind in population:
@@ -43,7 +43,7 @@ class noveltymap:
         return sorted(self.map,key=lambda u:u.novelty)[:self.popnum]
 
 
-NGEN = 100
+NGEN = 200
 POPNUM = 150
 N = 7
 INDSIZE = N
@@ -55,18 +55,21 @@ creator.create("Individual", list, fitness=creator.FitnessMin)
 
 toolbox = base.Toolbox()
 #toolbox.register("attr_float",random.random)
-toolbox.register("attr_float",random.uniform,-5,5)
+toolbox.register("attr_float",random.uniform,-10,10)
 toolbox.register("individual",tools.initRepeat,creator.Individual,toolbox.attr_float,n=INDSIZE)
 toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 
 
-toolbox.register("evaluate",benchmarks.himmelblau)
+toolbox.register("evaluate",benchmarks.rastrigin)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.05) #mutFllipBit floatに対して津えるやつ
 toolbox.register("select",tools.selTournament,tournsize=3)
 
 def func(pop):
       return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2,-2,-2,-2,-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4,4,4,4,4,4],  axis=0) + 1)),
+
+def func(pop):
+      return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4],  axis=0) + 1)),
 
 
 def main():
@@ -79,14 +82,14 @@ def main():
     stats.register("min", np.min)
     stats.register("max", np.max)
     #pop,hof = algorithms.eaSimple(pop,toolbox,cxpb=0.5,mutpb=0.01,ngen=200,stats=stats,halloffame=hof,verbose=True)
-    fitness = list(map(func,np.clip(pop,-7,7)))
+    fitness = list(map(toolbox.evaluate,np.clip(pop,-7,7)))
 
     for ind, fit in zip(pop, fitness):
         ind.fitness.values = fit
 
     nvmap = noveltymap(3,POPNUM)
     step = 0
-    print("gen ","min ""max ","mean")
+    #print("gen ","min ""max ","mean")
     for i in range(NGEN):
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
@@ -116,14 +119,14 @@ def main():
                 off = _ind.xy
                 off.fitness.values = _ind.novelty,
                 pop[:] = offspring
-                fits = [func(ind)[0] for ind in pop]
+                fits = [toolbox.evaluate(ind)[0] for ind in pop]
         else:
             invalid_ind = [ind for ind in offspring if not ind.fitness.valid]
             """
             for ind in invalid_ind:
                 nvmap.ax.scatter(ind[0],ind[1],c='blue',marker='.')
             """
-            fitness = list(map(func,np.clip(invalid_ind,-5,5)))
+            fitness = list(map(toolbox.evaluate,np.clip(invalid_ind,-5,5)))
             for ind, fit in zip(invalid_ind, fitness):
                 ind.fitness.values = fit
 
@@ -137,7 +140,7 @@ def main():
         mean = sum(fits) / length
         #sum2 = sum(x*x for x in fits)
         #std = abs(sum2 / length - mean**2)**0.5
-        print(i ,min(fits) ,max(fits) ,mean)
+        #print(i ,min(fits) ,max(fits) ,mean)
         if min(fits) <= np.exp(-10):
             step += 1
             break
@@ -156,6 +159,10 @@ if __name__=='__main__':
     for i in range(500):
         pop,hof,step = main()
         total += step
+        print(i,step,hof)
     print(total)
     expr = tools.selBest(hof,1)[0]
-    print(expr)
+    #print(expr)
+"""
+dc 57
+"""

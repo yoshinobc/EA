@@ -36,7 +36,7 @@ w_list = []
 count = 0
 creator.create("FitnessMax",base.Fitness,weights=[1.0])
 creator.create("Individual", list, fitness=creator.FitnessMax)
-NGEN = 1000
+NGEN = 300
 CXPB=0.5
 MUTPB=0.2
 toolbox = base.Toolbox()
@@ -63,15 +63,16 @@ def getfit(individual):
     observation = env.reset()
     network = nn.update(individual)
     total_reward = 0
-    for i in range(3700):
-        action = get_action(observation,network)
-        observation,reward,done,xylists = env.step(action)
-        total_reward += reward
-        if done:
-            break
-    if total_reward >= hof.fit:
-        hof.update(individual,total_reward)
-    return total_reward
+    for _ in range(3):
+      for i in range(3700):
+          action = get_action(observation,network)
+          observation,reward,done,xylists = env.step(action)
+          total_reward += reward
+          if done:
+              break
+      if total_reward >= hof.fit:
+          hof.update(individual,total_reward)
+      return total_reward
 
 
 def EV(individual,gen):
@@ -101,21 +102,20 @@ def EV(individual,gen):
         MAX_STEPS = 100
 
     final_novelty = 0
-    for _ in range(2):
+    for _ in range(3):
         total_novelty = 0
         action_lists = []
-        for i in range(MAX_STEPS):
+        while True:
             action = get_action(observation,network)
             observation,reward,done,xylists = env.step(action)
             action_lists.append(xylists)
         #if (-4.8  > observation[0]) or (observation[0] > 4.8) or (0.017453292519943 < observation[3] < -0.017453292519943) or (episode_reward >= MAX_STEPS):
-            steps = i
             if done:
                 break
         for i in range(len(action_lists) - 1):
             total_novelty += np.sqrt((action_lists[i+1][0] - action_lists[i][0])**2 + (action_lists[i+1][1] - action_lists[i][1])**2)
         final_novelty += total_novelty
-    return final_novelty / 2,
+    return final_novelty / 3,
 
 toolbox.register("evaluate",EV,gen = 0)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
@@ -152,7 +152,7 @@ def main():
 
     random.seed(1)
 
-    pop = toolbox.population(n=150)
+    pop = toolbox.population(n=250)
     """
     with open('gen100checkpoints', 'rb') as f:
         pop = pickle.load(f)
@@ -175,8 +175,6 @@ def main():
     for i in range(NGEN):
         # Select the next generation individuals
         offspring = toolbox.select(pop, len(pop))
-        print(len((offspring)))
-        print("test")
         # Clone the selected individuals
         offspring = list(map(toolbox.clone, offspring))
 
@@ -229,7 +227,7 @@ def main():
         #print("gen:",i,"  Min %s" % min(fits),"  Max %s" % max(fits),"  Avg %s" % mean,"  Std %s" % std)
 
         print(i,max(fits),mean)
-        with open('liner_novelty_hardcore.txt',mode='a') as f:
+        with open('liner_novelty.txt',mode='a') as f:
             f.write(str(i))
             f.write(" ")
             f.write(str(max(fits)))
