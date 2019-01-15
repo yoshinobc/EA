@@ -60,7 +60,7 @@ toolbox.register("individual",tools.initRepeat,creator.Individual,toolbox.attr_f
 toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 
 
-toolbox.register("evaluate",benchmarks.rastrigin)
+toolbox.register("evaluate",benchmarks.sphere)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.05) #mutFllipBit floatに対して津えるやつ
 toolbox.register("select",tools.selTournament,tournsize=3)

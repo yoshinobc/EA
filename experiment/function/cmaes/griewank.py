@@ -23,7 +23,7 @@ def main():
     numpy.random.seed(64)
 
     # The CMA-ES algorithm
-    strategy = cma.Strategy(centroid=[5.0]*N, sigma=3.0, lambda_=20*N)
+    strategy = cma.Strategy(centroid=[5.0]*N, sigma=3.0, lambda_=150)
     toolbox.register("generate", strategy.generate, creator.Individual)
     toolbox.register("update", strategy.update)
 
@@ -66,25 +66,21 @@ def main():
         halloffame_array.append(halloffame[0])
         C_array.append(strategy.C)
         centroid_array.append(strategy.centroid)
-    return population,ok_count,stop_gen
+    return population,ok_count,stop_gen,halloffame
     # 計算結果を描画
 
 if __name__ == "__main__":
     count = 0
     sum_gen = 0
     start = time.time()
-<<<<<<< HEAD
     for i in range(500):
-=======
-    for i in range(1000):
->>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
-        print(i)
-        pop,ok_count,stop_gen = main()
+
+        pop,ok_count,stop_gen,hof = main()
         count += ok_count
         sum_gen += stop_gen
-    episode_time = time.time() - start
-    print("count",count)
-<<<<<<< HEAD
+        episode_time = time.time() - start
+        print(i,ok_count,hof)
+    print(count)
     print("sum_gen",sum_gen / 500)
     print("time",episode_time)
 """
@@ -92,7 +88,4 @@ count 500
 sum_gen 43.0
 time 56.98126745223999
 """
-=======
-    print("sum_gen",sum_gen / 1000)
-    print("time",episode_time)
->>>>>>> 1e09a4eed7940731ce893f9d6747f46ba99db22d
+
