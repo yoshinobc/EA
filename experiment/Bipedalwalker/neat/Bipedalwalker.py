@@ -10,7 +10,7 @@ import pickle
 MAX_STEPS = 500
 count = 0
 reward_list = []
-env = gym.make("BipedalWalker-v2")
+env = gym.make("BipedalWalkerHardcore-v2")
 #env = wrappers.Monitor(env, '/mnt/c/Users/bc/Documents/EA/neat/cartpole/movies', video_callable=(lambda ep: ep % 150 == 0), force=True)
 def eval_genomes(genomes, config):
     global env
@@ -86,7 +86,7 @@ def run(config_file):
     p.add_reporter(neat.Checkpointer(10))
     #for j in range(20):
         # Run for up to 300 generations.
-    winner = p.run(eval_genomes, 300)
+    winner = p.run(eval_genomes, 1000)
     print(reward_list)
         # Display the winning genome.
     print('\nBest genome:\n{!s}'.format(winner))
