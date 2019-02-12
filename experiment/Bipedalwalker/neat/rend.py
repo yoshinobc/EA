@@ -15,7 +15,11 @@ def eval_genomes(genomes, config):
     global env
     global MAX_STEPS
     global count
+<<<<<<< HEAD
     env = gym.make("BipedalWalker-v2")
+=======
+    env = gym.make("BipedalWalkerHardcore-v2")
+>>>>>>> b15bd3040d6b071fdc3e2df55e05b8914a49f357
     max_episode_fitness = -500
     for genome_id, genome in reversed(genomes):
         genome.fitness = 0
@@ -25,9 +29,16 @@ def eval_genomes(genomes, config):
             #visualize.draw_net(config, g, view=False, filename=str(count)+name + "-net.gv")
             #visualize.draw_net(config, g, view=False, filename=str(count)+"tempnet-enabled.gv",show_disabled=False)
         for _ in range(1):
+<<<<<<< HEAD
             for i in range(5000):
                 action = net.activate(observation)
                 action = np.clip(action,-1,1)
+=======
+            for i in range(200):
+                action = net.activate(observation)
+                action = np.clip(action,-1,1)
+                env.render()
+>>>>>>> b15bd3040d6b071fdc3e2df55e05b8914a49f357
                 observation,reward,done,info = env.step(action)
                 episode_reward += reward
             #if (-4.8  > observation[0]) or (observation[0] > 4.8) or (0.017453292519943 < observation[3] < -0.017453292519943) or (episode_reward >= MAX_STEPS):
@@ -42,9 +53,15 @@ def eval_genomes(genomes, config):
             winner = genome
     print(max_episode_fitness)
     winner_net = neat.nn.FeedForwardNetwork.create(winner, config)
+<<<<<<< HEAD
     env = wrappers.Monitor(env, '/mnt/c/Users/bc/Documents/EA/experiment/Bipedalwalker/neat/movies', force=True)
     observation = env.reset()
     for i in range(5000):
+=======
+    #env = wrappers.Monitor(env, '/home/bc/Documents/EA/experiment/Bipedalwalker/neat/movies', force=True)
+    observation = env.reset()
+    for i in range(500):
+>>>>>>> b15bd3040d6b071fdc3e2df55e05b8914a49f357
             action = winner_net.activate(observation)
             env.render()
             action = np.clip(action,-1,1)
@@ -74,7 +91,11 @@ def run(config_file):
 
     # Create the population, which is the top-level object for a NEAT run.
     #p = neat.Population(config)
+<<<<<<< HEAD
     p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-298')
+=======
+    p = neat.Checkpointer.restore_checkpoint('neat-checkpoint-214')
+>>>>>>> b15bd3040d6b071fdc3e2df55e05b8914a49f357
     # Add a stdout reporter to show progress in the terminal.
     p.add_reporter(neat.StdOutReporter(True))
     stats = neat.StatisticsReporter()

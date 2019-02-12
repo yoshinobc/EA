@@ -48,7 +48,7 @@ def main():
     np.random.seed(64)
 
     # The CMA-ES algorithm
-    strategy = cma.Strategy(centroid=[5.0]*N, sigma=3.0, lambda_=150)
+    strategy = cma.Strategy(centroid=[5]*N, sigma=2, lambda_=150)
     toolbox.register("generate", strategy.generate, creator.Individual)
     toolbox.register("update", strategy.update)
 
@@ -65,11 +65,14 @@ def main():
         # 新たな世代の個体群を生成
         population = toolbox.generate()
         # 個体群の評価
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 
         fitnesses = toolbox.map(func, population,)
 =======
+=======
+>>>>>>> b15bd3040d6b071fdc3e2df55e05b8914a49f357
         fitnesses = toolbox.map(func, population)
 >>>>>>> 6f6d7f87ee8012c99eac865a99d7172cf4ce0c02
 
