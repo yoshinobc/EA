@@ -6,11 +6,6 @@ import csv
 import time
 
 def func(pop):
-      _x = pop[0]
-      _y = pop[1]
-      return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2,-2,-2,-2,-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4,4,4,4,4,4],  axis=0) + 1)),
-
-def func(pop):
       return (1 - 1 / (1 * np.linalg.norm(np.array(pop) - [-2,-2], axis=0) + 1)) + (1 - 1 / (2 *np.linalg.norm(np.array(pop) - [4,4],  axis=0) + 1)),
 
 NGEN = 200
@@ -97,8 +92,7 @@ def main():
         sum2 = sum(x*x for x in fits)
         std = abs(sum2 / length - mean**2)**0.5
 
-        #print(gen  ,min(fits) ,max(fits) ,mean ,std)
-        """
+        print(gen  ,min(fits) ,max(fits) ,mean ,std)
         with open('dc.txt',mode='a') as f:
             f.write(str(gen))
             f.write(" ")
@@ -106,19 +100,13 @@ def main():
             f.write(" ")
             f.write(str(mean))
             f.write("\n")
-        """
-        if min(fits) <= 0.8945735017712877 + np.exp(-10) :
-            stop_gen = gen
-            ok_count = 1
-            print(ok_count)
-            break
     return pop,hof,ok_count,stop_gen
 
 if __name__=='__main__':
     print("pop_num = ",POPNUM)
     print("gen_num ",NGEN)
     count = 0
-    trials = 500
+    trials = 1
     count_gen = 0
     start = time.time()
     for i in range(trials):

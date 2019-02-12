@@ -30,7 +30,7 @@ class noveltymap:
         #self.ax.scatter(xy[0],xy[1],c='red',marker='.')
 
     def calFit(self,ind):
-        return func(ind)[0]
+        return toolbox.evaluate(ind)[0]
 
     def popInd(self,population):
         for ind in population:
@@ -45,7 +45,7 @@ class noveltymap:
 
 NGEN = 200
 POPNUM = 150
-N = 2
+N = 7
 INDSIZE = N
 CXPB = 0.5
 MUTPB = 0.01
@@ -59,7 +59,7 @@ toolbox.register("individual",tools.initRepeat,creator.Individual,toolbox.attr_f
 toolbox.register("population",tools.initRepeat,list,toolbox.individual)
 
 
-toolbox.register("evaluate",benchmarks.himmelblau)
+toolbox.register("evaluate",benchmarks.griewank)
 toolbox.register("mate",tools.cxBlend,alpha=0.5) #float
 toolbox.register("mutate",tools.mutGaussian,mu=0,sigma=0.5,indpb=0.05) #mutFllipBit floatに対して津えるやつ
 toolbox.register("select",tools.selTournament,tournsize=3)
@@ -81,11 +81,11 @@ def main():
     stats.register("min", np.min)
     stats.register("max", np.max)
     #pop,hof = algorithms.eaSimple(pop,toolbox,cxpb=0.5,mutpb=0.01,ngen=200,stats=stats,halloffame=hof,verbose=True)
-    fitness = list(map(func,np.clip(pop,-5,5)))
+    fitness = list(map(toolbox.evaluate,pop))
 
     for ind, fit in zip(pop, fitness):
         ind.fitness.values = fit
-    min_fit = min(fitness)
+    min_fit = 0
     nvmap = noveltymap(5,POPNUM)
     step = 0
     #print("gen ","min ""max ","mean")
@@ -115,6 +115,7 @@ def main():
                 del mutant.fitness.values
         if novflag == 2:
             #print("nov")
+            novflag = 0
             _pop = nvmap.popInd(pop)
             for off ,_ind in zip(offspring,_pop):
                 off = _ind.xy
@@ -127,7 +128,7 @@ def main():
             for ind in invalid_ind:
                 nvmap.ax.scatter(ind[0],ind[1],c='blue',marker='.')
             """
-            fitness = list(map(func,np.clip(invalid_ind,-5,5)))
+            fitness = list(map(toolbox.evaluate,invalid_ind))
             for ind, fit in zip(invalid_ind, fitness):
                 ind.fitness.values = fit
 
@@ -141,13 +142,13 @@ def main():
         mean = sum(fits) / length
         #sum2 = sum(x*x for x in fits)
         #std = abs(sum2 / length - mean**2)**0.5
-        if (min(fits) - min_fit) == 0:
+        if abs(min(fits) - min_fit) == 0.001:
             novflag += 1
         else :
             novflag = 0
         #print(i ,min(fits) ,max(fits) ,mean)
         min_fit = min(fits)
-        if min(fits) <= np.exp(-10) + 0.8945735017712877:
+        if min(fits) <= np.exp(-10):
             step +=1
             break
         #print("gen:",i,"  Min %s" % min(fits),"  Max %s" % max(fits),"  Avg %s" % mean)
